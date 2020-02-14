@@ -1,0 +1,69 @@
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
+
+
+
+// MDC
+
+int mdc (int, int, int, int);
+
+int main(int argc, char** argv)
+{
+	int num1 = 0;
+	int num2 = 0;
+	int aux = 1;
+	int d = 2;
+	
+	cout<< "Progrma que realiza MDC de dois numeros:\n";
+	
+	cout<< "Digite primeiro numero: ";
+	cin>> num1;
+	
+	cout<< "Digite segundo numero: ";
+	cin>> num2;
+	
+	cout<< "O MDC entre " << num1 << " e " << num2 << " eh: " << mdc(num1, num2, aux, d);
+	
+	cout<< "\n";
+	system ("pause");
+	return 0;
+}
+
+int mdc(int n1, int n2, int aux, int d)
+{
+	if ((n1 == 1) && (n2 == 1))
+	{
+		return aux;
+		
+	}
+	else
+	{
+		if (((n1 % d) == 0) && ((n2 % d) == 0))
+		{
+			return mdc((n1 / d), (n2 / d), (aux * d), d);
+		
+		}
+		
+		if (((n1 % d)== 0) && ((n2 % d) != 0))
+		{
+			return mdc((n1 / d), (n2), aux, d);
+			
+		}
+		
+		if (((n1 % d) != 0) && ((n2 % d) == 0))
+		{
+			return mdc((n1), (n2 / d), aux, d);
+		
+		}
+		
+		if (((n1 % d) != 0) && ((n2 % d) != 0))
+		{
+			return mdc(n1, n2, aux, (d + 1));
+		
+		}
+		
+	}
+	
+}
