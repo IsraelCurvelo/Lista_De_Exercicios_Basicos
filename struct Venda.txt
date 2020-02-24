@@ -1,0 +1,297 @@
+// AppPadrao.cpp : Defines the entry point for the console application.
+//
+
+#include "stdafx.h"
+#include "Constantes.h"
+#include "Funcoes.h"
+int main()
+{
+	int opcao;
+	posicaoProduto = 0;
+	posicaoCliente = 0;
+	posicaoVenda = 0;
+	do {
+		exibirMenu();
+		cin >> opcao;
+		switch (opcao) {
+		case CARGA_PRODUTO:
+			posicaoProduto = incluirProduto(listaProduto,posicaoProduto);
+			break;
+		case LISTAR_PRODUTO:
+			exibirProdutos(listaProduto, 0, posicaoProduto);
+			break;
+		case EXCLUIR_PRODUTO:
+			posicaoProduto= excluirProduto(listaProduto, posicaoProduto);
+			break;
+		case CARGA_CLIENTE:
+			posicaoCliente = incluirCliente(listaCliente, posicaoCliente);
+			break;
+		case LISTAR_CLIENTE:
+			exibirCliente(listaCliente, 0, posicaoProduto);
+			break;
+		case EXCLUIR_CLIENTE:
+			posicaoCliente = excluirCliente(listaCliente, posicaoCliente);
+			break;
+		case VENDER:
+			posicaoVenda = incluirVenda(posicaoVenda);
+			break;
+		case EXIBIR_VENDAS:
+			exibirVendas(0,posicaoVenda);
+			break;
+		default: break;
+		}		
+	} while (opcao > 0 && opcao < 9);
+	return 0;
+}
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+#pragma once
+
+#include "targetver.h"
+
+#include <stdio.h>
+#include <tchar.h>
+#include <conio.h>
+#include <iostream>
+using namespace std;
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+#pragma once
+#define CARGA_PRODUTO  1
+#define LISTAR_PRODUTO  2
+#define EXCLUIR_PRODUTO  3
+
+#define CARGA_CLIENTE  4
+#define LISTAR_CLIENTE  5
+#define EXCLUIR_CLIENTE  6
+
+#define VENDER  7
+#define EXIBIR_VENDAS   8
+
+#define TAMANHO  4 
+#define LINHAS  4 
+#define COLUNAS  4 
+
+char produtos[TAMANHO];
+int posicaoProduto;
+char clientes[TAMANHO];
+int posicaoCliente;
+int vendas[LINHAS][COLUNAS];
+int posicaoVenda;
+
+
+typedef struct produt {
+	char nome[20];
+	int  codigo;
+	float preco;
+};
+
+typedef struct cli {
+	char nome[20];
+	char cpf[20];
+};
+
+typedef struct venda {
+	produt produto;
+	cli cliente;
+	int qtd;
+};
+
+produt listaProduto[TAMANHO];
+cli listaCliente[TAMANHO];
+venda listaVenda[TAMANHO];
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+
+#pragma once
+#include<conio.h>
+
+void exibirMenu() {
+	cout << "OPERACOES COM VETOR" << "\n";
+	cout << CARGA_PRODUTO << " - NOVO PRODUTO" << "\n";
+	cout << LISTAR_PRODUTO << " - LISTAR PRODUTO" << "\n";
+	cout << EXCLUIR_PRODUTO << " - EXCLUIR PRODUTO" << "\n";
+	cout << CARGA_CLIENTE << " - NOVO CLIENTE" << "\n";
+	cout << LISTAR_CLIENTE << " - LISTAR CLIENTE" << "\n";
+	cout << EXCLUIR_CLIENTE << " - EXCLUIR CLIENTE" << "\n";
+	cout << VENDER << " -  VENDER" << "\n";
+	cout << EXIBIR_VENDAS << " -  LISTAR VENDAS" << "\n";
+	cout << "9- SAIR" << "\n";
+	cout << "Entre com a opcao" << "\n";
+}
+
+int receberNumero() {
+	int numero;
+	cout << "Entre com um numero" << endl;
+	cin >> numero;
+	return numero;
+}
+
+char receberCaracter() {
+	char entrada;
+	cout << "Entre com um Caracter" << endl;
+	cin >> entrada;
+	return entrada;
+}
+
+int incluirProduto(produt vetor[TAMANHO], int posicao) {
+	produt p;
+	cout << "Entre com o nome do Produto" << endl;
+	cin >> p.nome;
+	cout << "Entre com o codigo do Produto" << endl;
+	cin >> p.codigo;
+	cout << "Entre com o preço" << endl;
+	cin >> p.preco;
+
+	vetor[posicao] = p;
+	posicao++;
+	return posicao;
+}
+
+int  pesquisarProdutos(produt vetor[TAMANHO], int i, int posicao,char nome[10]) {
+	if (i == posicao) {
+		return -1;
+	}
+	if (i == 0) {
+		cout << "Entre com o nome a ser pesquisado" << endl;
+		cin >> nome;
+	}
+	
+	if (strcmp(vetor[i].nome, nome) == 0) {
+		return i;
+	}
+	pesquisarProdutos(vetor, i + 1, posicao,nome);
+}
+
+int incluirCliente(cli vetor[TAMANHO], int posicao) {
+	cli p;
+	cout << "Entre com o nome do cliente" << endl;
+	cin >> p.nome;
+	cout << "Entre com o cpf" << endl;
+	cin >> p.cpf;
+
+	vetor[posicao] = p;
+	posicao++;
+	return posicao;
+}
+
+void exibirProdutos(produt vetor[TAMANHO], int i, int posicao) {
+	if (i == posicao) {
+		cout << "---------------" << endl;
+		return;
+	}
+	if (i == 0) {
+		cout << "---------------" << endl;
+	}
+	cout << "Posicao " << i << "-" << vetor[i].nome;
+	cout << vetor[i].codigo << "-" << vetor[i].preco << endl;
+	exibirProdutos(vetor, i + 1, posicao);
+}
+
+
+void exibirCliente(cli vetor[TAMANHO], int i, int posicao) {
+	if (i == posicao) {
+		cout << "---------------" << endl;
+		return;
+	}
+	if (i == 0) {
+		cout << "---------------" << endl;
+	}
+	cout << "Posicao " << i << "-" << vetor[i].nome;
+	cout << vetor[i].cpf << endl;
+	exibirCliente(vetor, i + 1, posicao);
+}
+
+
+
+
+int excluirProduto(produt vetor[TAMANHO], int posicao) {
+	int posicaoeclusao;
+	cout << "Entre com a posição a ser excluida";
+	cin >> posicaoeclusao;
+	
+	if (posicaoeclusao >= posicao) {
+		cout << "Posicao invalida";
+		return posicao;
+	}
+	for (int i = posicaoeclusao;i < posicao-1;i++) {
+		vetor[i] = vetor[i + 1];
+	}
+	posicao--;
+	return posicao;
+}
+
+int excluirCliente(cli vetor[TAMANHO], int posicao) {
+	int posicaoeclusao;
+	cout << "Entre com a posição a ser excluida";
+	cin >> posicaoeclusao;
+
+	if (posicaoeclusao >= posicao) {
+		cout << "Posicao invalida";
+		return posicao;
+	}
+	for (int i = posicaoeclusao;i < posicao - 1;i++) {
+		vetor[i] = vetor[i + 1];
+	}
+	posicao--;
+	return posicao;
+}
+
+
+int incluirVenda(int posicaoVenda) {
+	int cdproduto, cdcliente, qtde;
+	char nome[20];
+	cout << "selecione o produto a ser vendido" << endl;
+	cdproduto = pesquisarProdutos(listaProduto, 0, posicaoProduto, nome);
+	if (cdproduto == -1) {
+		cout << "produto nao encontrado" << endl;
+		return posicaoVenda;
+	}
+	cout << "selecione o cliente comprador" << endl;
+	exibirCliente(listaCliente, 0, posicaoProduto);
+	cout << "digite o codigo";
+	cin >> cdcliente;
+	cout << "digite a quantidade";
+	cin >> qtde;
+	listaVenda[posicaoVenda].produto =  listaProduto[cdproduto];
+	listaVenda[posicaoVenda].cliente = listaCliente[cdcliente];
+	listaVenda[posicaoVenda].qtd = qtde;
+	posicaoVenda++;
+	return posicaoVenda;
+}
+
+void exibirVendas( int i,int posicaoVenda) {
+	if (i == posicaoVenda) {
+		
+		return;
+	}
+	cout << "---------------" << endl;
+	cout << "Codigo Venda	: " << i << endl;
+	cout << "---------------" << endl;
+	cout << "Produto: " << "-";
+	cout << listaVenda[i].produto.nome << "-";
+	cout << listaVenda[i].produto.codigo << "-" << listaVenda[i].produto.preco << endl;
+	cout << "---------------" << endl;
+	cout << "Cliente: " << endl;
+	cout << listaVenda[i].cliente.nome;
+	cout << listaVenda[i].cliente.cpf << endl;
+	cout << "---------------" << endl;
+	cout << "Quantidade: " << endl;
+	cout << listaVenda[i].qtd;
+	exibirVendas(i + 1,posicaoVenda);
+}
+
+
+
+
+
+
+
